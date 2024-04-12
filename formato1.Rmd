@@ -1,0 +1,143 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+# Pagina 1
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
+# Pagina 2
+Column {data-width=500}
+-----------------------------------------------------------------------
+### Figura 21
+
+
+### Figura 22
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Figura 23
+
+
+# Pagina 3
+
+Row 
+------------------------------------------------------------------------
+### Grafico 31
+```{r}
+
+```
+
+
+
+Row
+-------------------------------------------------------------------------
+### Grafico 32
+
+```{r}
+
+```
+
+
+### Grafico 33
+
+# Pagina 4
+
+Column {.tabset}
+-----------------------------------------------------------------------
+### Grafico 41
+
+
+```{r}
+
+```
+
+### Grafico 41
+
+```{r}
+
+```
+
+###  Grafico 42
+
+
+# Pagina 5
+
+Row
+-----------------------------------------------------------------------
+
+### Articles per Day
+
+```{r}
+articles <- computeArticles()
+valueBox(articles, icon = "fa-pencil")
+```
+
+### Comments per Day
+
+```{r}
+comments <- computeComments()
+valueBox(comments, icon = "fa-comments")
+```
+
+### Spam per Day
+
+```{r}
+spam <- computeSpam()
+valueBox(spam, 
+         icon = "fa-trash",
+         color = ifelse(spam > 10, "warning", "primary"))
+```
+
+
+### Articles per Day
+
+```{r}
+articles <- computeArticles()
+valueBox(articles, icon = "fa-pencil")
+```
+
+### Comments per Day
+
+```{r}
+comments <- computeComments()
+valueBox(comments, icon = "fa-comments")
+```
+
+### Spam per Day
+
+```{r}
+spam <- computeSpam()
+valueBox(spam, 
+         icon = "fa-trash",
+         color = ifelse(spam > 10, "warning", "primary"))
+```

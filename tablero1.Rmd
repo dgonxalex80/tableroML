@@ -1,0 +1,83 @@
+---
+title: "Instituto de Medicina Legal"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+# aqui todos los objetos utilizaedos en todo el tablero
+library(flexdashboard)
+library(readr)
+library(ggplot2)
+library(RColorBrewer)
+library(raster)
+dptos <- read_csv("data/dptos.csv")
+casosCo <- read_csv("data/casosCo.csv")
+sex22 <- read_csv("data/sex22.csv")
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Casos 2022
+
+```{r}
+mi.palette <- brewer.pal(n = 45, name = "YlOrRd")   # paleta de colores
+mapco=shapefile("map/depto.shp")  # importa mapa en formato .shp
+casos <- dptos$`2012`
+
+mapco@data$casos=casos # se adiciona variable con 33 valores = 33 dptos, en mismo orden
+spplot(mapco[,6], col.regions = mi.palette, cuts = 6)  # mapa
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Edad por rangos 2022
+
+```{r}
+tabla22 <- table(sex22$edadR)
+namedadR <- c("menos de 1", " 1 - 5", " 6 - 11", "12 - 17", "18 - 28")
+names(tabla22) <- namedadR
+
+barplot(tabla22, las = 1, ylim = c(0, 1000),
+        main = "Violencia sexual por rango de edad - 2021",
+        xlab = "edad - años",
+        ylab = "frecuencia",
+        col = "#FF8C00")
+grid()
+
+```
+
+### Casos por departamento 
+
+```{r}
+casosCo <- casosCo[order(-casosCo$casosh), ]
+
+# Crear una paleta de colores degradada de rojos
+red_palette <- colorRampPalette(c("#FFC685", "#AE123A"))(nrow(casosCo))
+
+# Gráfico de barras
+ggplot(casosCo, aes(x = reorder(ndep, casos), y = casosh, fill = casos)) + 
+  geom_col() + 
+  geom_text(aes(label = casos), hjust = -0.1, size = 2, color = "gray30") +
+  scale_y_continuous(labels = scales::comma, name = "", expand = expansion(mult = c(0, 0.05))) +
+  scale_fill_gradientn(colors = red_palette, guide = FALSE) +
+  coord_flip() + 
+  theme_minimal() +
+  theme(
+    text = element_text(color = "gray30"),
+    axis.text.y = element_text(size = 5, color = "gray30"),
+    axis.text.x = element_text(size = 5, color = "gray30"),
+    legend.position = "none",
+    plot.margin = margin(1, 1, 1, 2),
+    axis.title = element_text(size = 6)
+  ) +
+  labs(x = "Departamentos")
+```
+

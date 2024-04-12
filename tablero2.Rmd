@@ -1,0 +1,168 @@
+---
+title: "VIOLENCIA SEXUAL"
+subtitle: "IML" 
+author : ""
+output: 
+  flexdashboard::flex_dashboard:
+    logo: "img/logo.png"
+    theme:
+      bg: "#E1E8Ec"
+      fg: "#0B3948" 
+      primary: "#416165"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(tidyr)
+library(sf)
+library(rnaturalearth)
+library(ggplot2)
+library(gridExtra)
+library(raster)
+library(scales)
+
+
+# ISO - dptos: https://dgn.isolutions.iso.org/obp/ui#iso:code:3166:CO
+COL <- read_sf("map/COL_adm0.shp")
+COLdep <- read_sf("map/COL_adm1.shp")
+COLmun <- read_sf("map/COL_adm2.shp")
+
+# bases de datos
+dptos <- read_csv("data/dptos.csv")
+casosCo <- read_csv("data/casosCo.csv")
+sex22 <- read_csv("data/sex22.csv")
+```
+
+
+
+row
+-----------------------------------------------------------------------
+
+### Articles per Day
+
+```{r}
+valueBox(45, icon = "fa-pencil")
+```
+
+### Comments per Day
+
+```{r}
+valueBox(126, icon = "fa-comments")
+```
+
+### Spam per Day
+
+```{r}
+spam <- 5
+valueBox(spam, 
+         icon = "fa-trash",
+         color = ifelse(spam > 10, "warning", "primary"))
+```
+
+### Contact Rate
+
+```{r}
+gauge(90, min = 0, max = 100, symbol = '%', gaugeSectors(
+  success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
+))
+```
+
+### Average Rating 
+
+```{r}
+gauge(37.4, min = 0, max = 50, gaugeSectors(
+  success = c(41, 50), warning = c(21, 40), danger = c(0, 20)
+))
+```
+
+### Cancellations
+
+```{r}
+gauge(7, min = 0, max = 10, gaugeSectors(
+  success = c(0, 2), warning = c(3, 6), danger = c(7, 10)
+))
+```
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Colombia
+
+```{r}
+
+
+```
+
+
+### Antioquia
+
+```{r}
+ant<- COLmun %>% 
+        dplyr::filter(NAME_1 == "Antioquia")
+
+ggplot(ant) +
+  geom_sf(data=ant, aes(fill = ID_2), color = "black", size = 0.25) +
+  theme(aspect.ratio=1)+
+  scale_fill_distiller(name="ID_2", palette = "YlOrRd", breaks = scales::pretty_breaks(n = 5))+
+  labs(title=" ", x = " ", y = " ")
+
+```
+
+### Cundinamarca
+
+
+```{r}
+cundinamarca <- COLmun %>% 
+    dplyr::filter(NAME_1 == "Cundinamarca")
+ggplot(cundinamarca) +
+  geom_sf(data=cundinamarca, aes(fill =
+                                       ID_2), color = "black", size = 0.25) +
+  theme(aspect.ratio=1)+
+  scale_fill_distiller(name="ID_2", palette = "YlOrRd", breaks = scales::pretty_breaks(n = 5))+
+  labs(title=" ")
+```
+
+
+### Risaralda
+
+```{r}
+risaralda <- COLmun %>% 
+   dplyr::filter(NAME_1 == "Risaralda")
+
+ ggplot(risaralda) +
+   geom_sf(data=risaralda, aes(fill =
+                                        ID_2), color = "black", size = 0.25) +
+   theme(aspect.ratio=1)+
+   scale_fill_distiller(name="ID_2", palette = "YlOrRd", breaks = scales::pretty_breaks(n = 5))+
+  labs(title=" ")
+ 
+```
+
+### Valle
+
+```{r}
+ valle <- COLmun %>% 
+            dplyr::filter(NAME_1 == "Valle del Cauca")
+# 
+# valle_points<- st_centroid(valle)
+# valle_points <- cbind(valle, st_coordinates(st_centroid(valle$geometry)))
+# 
+ ggplot(valle) + 
+   geom_sf(data=valle, aes(fill =
+                                        ID_2), color = "black", size = 0.25) +
+   theme(aspect.ratio=1)+
+   scale_fill_distiller(name="ID_2", palette = "YlOrRd", breaks = scales::pretty_breaks(n = 5))+
+   labs(title=" ") +
+   coord_sf(xlim = c(-77.8, -75.6), ylim = c(3, 5))
+```
+# Pagina 2
+
+
+

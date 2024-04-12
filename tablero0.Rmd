@@ -1,0 +1,76 @@
+---
+title: "Instituto de Medicina Legal"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(ggplot2)
+library(RColorBrewer)
+library(raster)
+dptos <- read_csv("data/dptos.csv")
+casosCo <- read_csv("data/casosCo.csv")
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Colombia - casos violencia sexual 2022
+
+```{r}
+
+## Casos de violencia sexual 2021
+
+
+#------------------------------------
+# Ordenar los datos por casosh de mayor a menor
+casosCo <- casosCo[order(-casosCo$casosh), ]
+
+# Crear una paleta de colores degradada de rojos
+red_palette <- colorRampPalette(c("#FFC685", "#AE123A"))(nrow(casosCo))
+
+# Gráfico de barras
+ggplot(casosCo, aes(x = reorder(ndep, casos), y = casos, fill = casos)) + 
+  geom_col() + 
+  geom_text(aes(label = casos), hjust = -0.1, size = 2, color = "gray30") +
+  scale_y_continuous(labels = scales::comma, name = "", expand = expansion(mult = c(0, 0.05))) +
+  scale_fill_gradientn(colors = red_palette, guide = FALSE) +
+  coord_flip() + 
+  theme_minimal() +
+  theme(
+    text = element_text(color = "gray30"),
+    axis.text.y = element_text(size = 5, color = "gray30"),
+    axis.text.x = element_text(size = 5, color = "gray30"),
+    legend.position = "none",
+    plot.margin = margin(1, 1, 1, 2),
+    axis.title = element_text(size = 6)
+  ) +
+  labs(
+    x = "Departamentos",
+    y  = "Casos "
+  )
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Violencia sexual 2022
+
+```{r}
+
+mi.palette <- brewer.pal(n = 7, name = "YlOrRd")   # paleta de colores
+mapco=shapefile("map/depto.shp")  # importa mapa en formato .shp
+casos <- dptos$`2012`
+
+mapco@data$casos=casos # se adiciona variable con 33 valores = 33 dptos, en mismo orden
+spplot(mapco[,6], col.regions = mi.palette, cuts = 6)  # mapa
+
+
+
+```
+
+
